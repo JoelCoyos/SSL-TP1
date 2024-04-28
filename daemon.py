@@ -19,7 +19,7 @@ class daemon:
 			sys.stderr.write('fork #1 failed: {0}\n'.format(err))
 			sys.exit(1)
 		# decouple from parent environment
-		os.chdir('/') 
+		#os.chdir('/') 
 		os.umask(0) 
 		os.setsid() 
 	

@@ -26,7 +26,7 @@ class Weather():
         latitude, longitude = self.location_handler(message)
         weather = self.get_weather(latitude,longitude)
         data = weather['list']
-        data_2 = data[3]
+        data_2 = data[0]
         info_weather = data_2['weather']
         info_main= data_2['main']
         temp= info_main['temp']
@@ -37,8 +37,7 @@ class Weather():
         description = data_3['description']
         icon = data_3['icon']
         weather_message = f'*Temperatura de hoy será:* {temp}°C\n *Sensación térmica:* {feels_like}°C\n *Temperatura máxima:* {temp_max}°C\n *Temperatura mínima:* {temp_min}°C\n *Descripción:* {description}\n'
-        print(icon)
-        return weather_message
+        return weather_message,icon
 
     def location_handler(self,message):
         '''

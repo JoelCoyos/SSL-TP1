@@ -13,7 +13,7 @@ from weather import Weather
 class TelegramWeatherBot():
     def __init__(self):
         config = configparser.ConfigParser()
-        config.read('/etc/Weather/config.ini')
+        config.read('config.ini')
         bot_token = config.get('Tokens','telegram_token')
         weather_token = config.get('Tokens','weather_token')
         self.bot = telebot.TeleBot(bot_token)
@@ -22,7 +22,7 @@ class TelegramWeatherBot():
 
         self.subscribed_dict = {}
 
-        logging.basicConfig(filename='/etc/Weather/weather.log',
+        logging.basicConfig(filename='weather.log',
                     filemode='a',
                     format='%(levelname)s %(asctime)s,%(msecs)d %(name)s %(message)s',
                     datefmt='%H:%M:%S',
@@ -74,18 +74,19 @@ class TelegramWeatherBot():
 
     def send_weather(self,message):
         logging.info('El usuario selecciono la ciudad ' + str(message.text))
-        weather_message = self.weather.fetch_weather(message.text)
+        weather_message,icon = self.weather.fetch_weather(message.text)
         self.bot.send_message(message.chat.id, 'Ahí está el clima!')
         self.bot.send_message(message.chat.id, weather_message, parse_mode='Markdown')
-        url = 'https://openweathermap.org/img/wn/{}@2x.png'.format('10n')
+        print(icon)
+        url = 'https://openweathermap.org/img/wn/{}@2x.png'.format(icon)
         self.bot.send_photo(message.chat.id, photo= url)
 
     def send_automatic_weather(self):
         for chat_id,location in self.subscribed_dict.items():
-            weather_message = self.weather.fetch_weather(location)
+            weather_message,icon = self.weather.fetch_weather(location)
             self.bot.send_message(chat_id, 'Ahí está el clima!')
             self.bot.send_message(chat_id, weather_message, parse_mode='Markdown')
-            url = 'https://openweathermap.org/img/wn/{}@2x.png'.format('10n')
+            url = 'https://openweathermap.org/img/wn/{}@2x.png'.format(icon)
             self.bot.send_photo(chat_id, photo= url)
 
     def subscribe_weather(self,message):
